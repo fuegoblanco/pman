@@ -5,19 +5,15 @@ import { Pacman } from './Pacman';
 import { Map } from './Map/Map';
 import { directionEnum } from './game-interfaces/direction.interface';
 import { GameMode } from './game-interfaces/modes.interface';
-import { Position } from './game-interfaces/position.interface';
 import { RedGhost } from './Enemy/RedGhost';
 import { BlueGhost } from './Enemy/BlueGhost';
 import { PinkGhost } from './Enemy/PinkGhost';
 import { OrangeGhost } from './Enemy/OrangeGhost';
 import { Enemy } from './Enemy/Enemy';
-import {
-  pacmanAnimInit,
-  ghostsAnimInit,
-  tweenMovement,
-} from './Utils/animations';
+import { pacmanAnimInit, ghostsAnimInit } from './Utils/animations';
 import { Utils } from './Utils/utils';
 import { Tile, fruit } from './Tile';
+import WebFont = require('webfontloader');
 
 export let scene;
 export let map: Map;
@@ -28,7 +24,7 @@ export let redGhost: Enemy;
 let pinkGhost: Enemy;
 let blueGhost: Enemy;
 let orangeGhost: Enemy;
-
+let cam;
 export let level = 1;
 export const SPEED = 3;
 export let points = 0;
@@ -50,7 +46,8 @@ let shouldFruitSpawn = true;
 let fruitTile: Tile;
 let previousTileValue: number;
 
-export const CENTER_MAP_POSITION = { x: 475, y: 475 };
+export const CENTER_MAP_POSITION = { x: 575, y: 575 };
+
 let pointGUI;
 let levelGUI;
 let upButton;
@@ -67,8 +64,6 @@ export class GameScene extends Phaser.Scene {
   enemyGroup;
   maxDots = 0;
   dots = 0;
-
-  logoImage;
 
   constructor() {
     super({});
@@ -98,7 +93,6 @@ export class GameScene extends Phaser.Scene {
     this.load.image('tileImage4', 'assets/forthTile.png');
     this.load.image('pointImage', 'assets/point.png');
     this.load.image('power-up', 'assets/power-up.png');
-    this.load.image('logo', 'assets/logo.png');
     this.load.image('door', 'assets/doorTile.png');
     this.load.image('blueDot', 'assets/blueDot.png');
     this.load.image('frightened', 'assets/frightened.png');
@@ -108,7 +102,6 @@ export class GameScene extends Phaser.Scene {
     this.load.image('DownButton', 'assets/down.png');
     this.load.image('LeftButton', 'assets/left.png');
     this.load.image('RightButton', 'assets/right.png');
-
     this.menuGameOver = this.add.group();
     this.imageGroup = this.add.group();
     this.pointsGroup = this.physics.add.staticGroup();
@@ -122,18 +115,16 @@ export class GameScene extends Phaser.Scene {
   //************************************ CREATE  ************************************/
   create() {
     player = this.physics.add.sprite(325, 575, 'pacman');
-    pointGUI = this.add.text(80, 1200, 'Points: 0', {
-      font: '30px',
-      color: '#FFFFFF',
+
+    pointGUI = this.add.text(500, 1050, 'SCORE: 0', {
+      fontFamily: 'digital-7',
+      fontSize: '64px',
     });
-    levelGUI = this.add.text(80, 1160, 'Level: 1', {
-      font: '30px',
-      color: '#FFFFFF',
-    });
-    upButton = this.add.sprite(150, 1300, 'UpButton').setInteractive();
-    downButton = this.add.sprite(150, 1475, 'DownButton').setInteractive();
-    leftButton = this.add.sprite(40, 1375, 'LeftButton').setInteractive();
-    rightButton = this.add.sprite(260, 1375, 'RightButton').setInteractive();
+    upButton = this.add.sprite(250, 1200, 'UpButton').setInteractive();
+
+    downButton = this.add.sprite(250, 1350, 'DownButton').setInteractive();
+    leftButton = this.add.sprite(140, 1275, 'LeftButton').setInteractive();
+    rightButton = this.add.sprite(360, 1275, 'RightButton').setInteractive();
 
     // gameScene.add.text( { font: "65px Arial", align: "center" }).setDepth(2).setOrigin(0.5, 0);
 
@@ -141,13 +132,13 @@ export class GameScene extends Phaser.Scene {
 
     pacmanAnimInit();
     ghostsAnimInit();
-
     map = new Map();
     pacman = new Pacman(player);
     redGhost = new RedGhost();
     pinkGhost = new PinkGhost();
     blueGhost = new BlueGhost();
     orangeGhost = new OrangeGhost();
+
     this.enemyGroup.enableBody = true;
 
     this.physics.add.overlap(player, this.pointsGroup, this.collectPoint);
@@ -166,8 +157,10 @@ export class GameScene extends Phaser.Scene {
       null,
       this
     );
-
     this.fruitSpawner();
+  }
+  player(player: any) {
+    throw new Error('Method not implemented.');
   }
 
   //************************************ UPDATE & BOUNDARIES  ************************************/
@@ -321,8 +314,7 @@ export class GameScene extends Phaser.Scene {
   drawGui() {
     let pointsText = `Points: ${points}`;
     pointGUI.setText(pointsText);
-    let levelText = `Level: ${level}`;
-    levelGUI.setText(levelText);
+
     upButton.on('pointerdown', () => {
       pacman.setRequestedDirection(directionEnum.NORTH);
     });
@@ -373,11 +365,12 @@ export class GameScene extends Phaser.Scene {
     backgroundMenu.setDepth(1);
   }
 }
+
 //************************************ CONFIG ************************************/
 var config = {
   type: Phaser.AUTO,
-  width: '100vw',
-  height: '100vh',
+  width: (devicePixelRatio / window.devicePixelRatio) * window.outerWidth,
+  height: window.innerHeight * devicePixelRatio,
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,

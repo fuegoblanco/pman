@@ -1,11 +1,19 @@
-import { Tile } from "../Tile";
-import { Position } from "../game-interfaces/position.interface";
-import { directionEnum } from "../game-interfaces/direction.interface";
-import { scene } from "../app";
-import { Utils } from "../Utils/utils";
-import { mapSetup1 } from "./Layouts";
+/** @format */
+
+import { Tile } from '../Tile';
+import { Position } from '../game-interfaces/position.interface';
+import { directionEnum } from '../game-interfaces/direction.interface';
+import { scene } from '../app';
+import { Utils } from '../Utils/utils';
+import { mapSetup1 } from './Layouts';
 
 export class Map {
+  width(arg0: number, arg1: number, width: any, height: any) {
+    throw new Error('Method not implemented.');
+  }
+  height(arg0: number, arg1: number, width: any, height: any) {
+    throw new Error('Method not implemented.');
+  }
   public MAP_TILE_WIDTH = 19;
   public MAP_TILE_HEIGHT = 21;
   public MAP_WIDTH = this.MAP_TILE_WIDTH * 50;
@@ -36,31 +44,34 @@ export class Map {
     var { x, y } = tile.getPosition();
 
     switch (dir) {
-      case "SOUTH":
+      case 'SOUTH':
         y += 1;
         break;
-      case "NORTH":
+      case 'NORTH':
         y -= 1;
         break;
-      case "WEST":
+      case 'WEST':
         x -= 1;
         break;
-      case "EAST":
+      case 'EAST':
         x += 1;
         break;
     }
 
-    return this.currentMap[y][x] || null
+    return this.currentMap[y][x] || null;
   }
 
-  public getTile( { x, y }: Position, type: "index" | "position" = "position"): Tile {
-    let currentX = type == "position" ? Math.floor(x / this.TILE_SIZE) : x;
-    let currentY = type == "position" ? Math.floor(y / this.TILE_SIZE) : y;
+  public getTile(
+    { x, y }: Position,
+    type: 'index' | 'position' = 'position'
+  ): Tile {
+    let currentX = type == 'position' ? Math.floor(x / this.TILE_SIZE) : x;
+    let currentY = type == 'position' ? Math.floor(y / this.TILE_SIZE) : y;
     return this.currentMap[currentY][currentX];
   }
 
   public getRandomAvailableTile(
-    zone: "NW" | "NE" | "SW" | "SE" | "ANYWHERE"
+    zone: 'NW' | 'NE' | 'SW' | 'SE' | 'ANYWHERE'
   ): Tile {
     let destinyTile: Tile;
 
@@ -73,16 +84,19 @@ export class Map {
         Math.floor(Math.random() * (+limits.maxY - +limits.minY)) +
         +limits.minY;
       destinyTile = this.currentMap[randomY][randomX];
-    } while (destinyTile.type == "WALL" || destinyTile.type == "DOOR" || destinyTile.type == "POWER_UP");
+    } while (
+      destinyTile.type == 'WALL' ||
+      destinyTile.type == 'DOOR' ||
+      destinyTile.type == 'POWER_UP'
+    );
 
     return destinyTile;
   }
 
-  public destroy(){
+  public destroy() {
     for (let y = 0; y < this.MAP_TILE_HEIGHT; y++) {
       for (let x = 0; x < this.MAP_TILE_WIDTH; x++) {
-        if( this.currentMap[y][x].image )
-          this.currentMap[y][x].image.destroy()
+        if (this.currentMap[y][x].image) this.currentMap[y][x].image.destroy();
       }
     }
   }
