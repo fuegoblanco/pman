@@ -128,6 +128,14 @@ export class GameScene extends Phaser.Scene {
 
     // gameScene.add.text( { font: "65px Arial", align: "center" }).setDepth(2).setOrigin(0.5, 0);
 
+    cam = this.cameras.main.setViewport(
+      -110,
+      -400,
+      675,
+      window.innerHeight * devicePixelRatio
+    );
+    this.cameras.main.setZoom(0.55);
+
     cursors = this.input.keyboard.createCursorKeys();
 
     pacmanAnimInit();
@@ -371,8 +379,8 @@ var config = {
   type: Phaser.CANVAS,
   parent: 'game',
   scale: {
-    width: 950,
-    height: 1400,
+    width: 600,
+    height: 800,
     mode: Phaser.Scale.ScaleModes.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
