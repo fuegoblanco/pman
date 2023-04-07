@@ -120,11 +120,11 @@ export class GameScene extends Phaser.Scene {
       fontFamily: 'digital-7',
       fontSize: '64px',
     });
-    upButton = this.add.sprite(250, 1200, 'UpButton').setInteractive();
+    upButton = this.add.sprite(250, 1150, 'UpButton').setInteractive();
 
     downButton = this.add.sprite(250, 1350, 'DownButton').setInteractive();
-    leftButton = this.add.sprite(140, 1275, 'LeftButton').setInteractive();
-    rightButton = this.add.sprite(360, 1275, 'RightButton').setInteractive();
+    leftButton = this.add.sprite(150, 1250, 'LeftButton').setInteractive();
+    rightButton = this.add.sprite(350, 1250, 'RightButton').setInteractive();
 
     // gameScene.add.text( { font: "65px Arial", align: "center" }).setDepth(2).setOrigin(0.5, 0);
 
@@ -368,13 +368,15 @@ export class GameScene extends Phaser.Scene {
 
 //************************************ CONFIG ************************************/
 var config = {
-  type: Phaser.AUTO,
-  width: devicePixelRatio * 600,
-  height: window.innerHeight * devicePixelRatio,
+  type: Phaser.CANVAS,
+  parent: 'game',
   scale: {
-    mode: Phaser.Scale.FIT,
+    width: 950,
+    height: 1400,
+    mode: Phaser.Scale.ScaleModes.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
+
   physics: {
     default: 'arcade',
     arcade: {
