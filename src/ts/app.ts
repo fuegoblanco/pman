@@ -369,7 +369,7 @@ export class GameScene extends Phaser.Scene {
 //************************************ CONFIG ************************************/
 var config = {
   type: Phaser.AUTO,
-  width: (devicePixelRatio / window.devicePixelRatio) * window.outerWidth,
+  width: devicePixelRatio * 600,
   height: window.innerHeight * devicePixelRatio,
   scale: {
     mode: Phaser.Scale.FIT,
