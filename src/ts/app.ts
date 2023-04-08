@@ -45,7 +45,6 @@ let isFruit = false;
 let shouldFruitSpawn = true;
 let fruitTile: Tile;
 let previousTileValue: number;
-
 export const CENTER_MAP_POSITION = { x: 575, y: 575 };
 
 let pointGUI;
@@ -129,7 +128,13 @@ export class GameScene extends Phaser.Scene {
     // gameScene.add.text( { font: "65px Arial", align: "center" }).setDepth(2).setOrigin(0.5, 0);
 
     cursors = this.input.keyboard.createCursorKeys();
-
+    this.cameras.main.setZoom(0.8);
+    this.cameras.main.setViewport(
+      -300,
+      -150,
+      devicePixelRatio * window.innerWidth,
+      devicePixelRatio * window.innerHeight
+    );
     pacmanAnimInit();
     ghostsAnimInit();
     map = new Map();
@@ -368,11 +373,11 @@ export class GameScene extends Phaser.Scene {
 
 //************************************ CONFIG ************************************/
 var config = {
-  type: Phaser.WEBGL,
+  type: Phaser.CANVAS,
   parent: 'game',
+  width: '100vw',
+  height: devicePixelRatio * window.innerHeight,
   scale: {
-    width: window.innerWidth * devicePixelRatio,
-    height: window.innerHeight * devicePixelRatio,
     mode: Phaser.Scale.ScaleModes.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
